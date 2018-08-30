@@ -84,21 +84,29 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Model\Product  $product
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $request['details']= $request->description;
+        unset($request['description']);
+        $product->update($request->all());
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Model\Product  $product
-     * @return \Illuminate\Http\Response
+     * @return Product
      */
     public function destroy(Product $product)
     {
-        //
+        try {
+            $product->delete();
+            return response(null,Response::HTTP_NO_CONTENT);
+        } catch (\Exception $e) {
+            return response($e,Response::HTTP_NO_CONTENT);
+        }
+
     }
 }
